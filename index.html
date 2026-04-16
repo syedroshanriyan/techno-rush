@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Techno Rush</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{overflow-x:hidden}
+
+/* ENTRY */
+.page-enter{animation:fadeIn 1s ease forwards}
+@keyframes fadeIn{
+0%{opacity:0;transform:translateY(20px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+/* SCROLL */
+.card-hidden{opacity:0;transform:translateY(50px)}
+.card-show{opacity:1;transform:translateY(0);transition:.7s}
+
+/* SHIMMER */
+.shimmer{background-size:200% auto;animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{background-position:-200%}100%{background-position:200%}}
+
+.gold{background:linear-gradient(120deg,#FFD700,#fff6b7,#FFD700);-webkit-background-clip:text;color:transparent}
+.silver{background:linear-gradient(120deg,#cfcfcf,#fff,#c0c0c0);-webkit-background-clip:text;color:transparent}
+
+/* VIDEO */
+#introVideo{position:fixed;inset:0;z-index:9999;background:black;display:flex;align-items:center;justify-content:center}
+#introVideo video{width:100%;height:100%;object-fit:cover}
+
+/* POSTER MODAL */
+#posterModal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+#posterModal img{
+max-width:90%;
+max-height:90%;
+border-radius:16px;
+}
+</style>
+</head>
+
+<body class="bg-black text-white">
+
+<!-- VIDEO -->
+<div id="introVideo">
+  <video autoplay muted playsinline id="videoPlayer">
+    <source src="intro.mp4" type="video/mp4">
+  </video>
+</div>
+
+<!-- POSTER MODAL -->
+<div id="posterModal" onclick="closePoster()">
+  <img id="posterImage">
+</div>
+
+<div class="px-4 sm:px-6 py-8 page-enter">
+
+<!-- HERO -->
+<div class="text-center mb-16 space-y-2">
+<h2 class="text-3xl sm:text-4xl md:text-6xl gold shimmer font-bold">DR.TTIT</h2>
+<p class="italic text-base sm:text-lg bg-gradient-to-r from-pink-400 to-blue-400 text-transparent bg-clip-text">PRESENTS</p>
+<h1 class="text-4xl sm:text-6xl md:text-7xl silver shimmer font-extrabold">TECHNO RUSH</h1>
+</div>
+
+<!-- FILTER TABS -->
+<div class="flex justify-center gap-4 mb-10 flex-wrap">
+<button onclick="filterEvents('All')" class="px-4 py-2 rounded-full border border-white/20">All</button>
+<button onclick="filterEvents('Technical')" class="px-4 py-2 rounded-full border border-white/20">Technical</button>
+<button onclick="filterEvents('Non-Technical')" class="px-4 py-2 rounded-full border border-white/20">Non-Technical</button>
+</div>
+
+<!-- EVENTS -->
+<div id="events" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+
+</div>
+
+<script>
+const events=[
+{title:"Circuit Design",category:"Technical",time:"10:30 AM - 11:30 AM",location:"ECE Lab",date:"25 April 2026",poster:"posters/circuit.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLScb4KNecfLLORRUSSYYZqLMDJnBdqF28EGczQa0A9fdWSKC4Q/viewform?usp=publish-editor"},
+{title:"Code Debugging",category:"Technical",time:"11:30 AM - 12:30 PM",location:"CSE Lab 4 & 5",date:"25 April 2026",poster:"posters/code.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLSctMD7lxMwCKRvTQ-4ZjT_PIcVNaAL-NVGuks33223Ii0qKxQ/viewform?usp=publish-editor"},
+{title:"Solid Modelling",category:"Technical",time:"11:30 AM - 12:30 PM",location:"CAED Lab",date:"25 April 2026",poster:"posters/solid.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLSe4qXhgg6BCw8vfcicJBWDueDz6EpUHFQ-L8zn8mWvcV-IC4Q/viewform"},
+{title:"Prompt Battle",category:"Technical",time:"01:30 PM - 02:30 PM",location:"CSE Lab 3",date:"25 April 2026",poster:"posters/prompt.jpeg",link:"https://forms.gle/T4DW7t4Uyibig32AA"},
+{title:"Web Design",category:"Technical",time:"01:30 PM - 02:30 PM",location:"CSE Lab 4 & 5",date:"25 April 2026",poster:"posters/web.jpeg",link:"https://share.google/QqN7HGJeUDIi5aBQx"},
+{title:"Poster Design",category:"Non-Technical",time:"11:30 AM - 12:30 PM",location:"Mechanical Seminar Hall",date:"25 April 2026",poster:"posters/poster.jpeg",link:"https://forms.gle/2RP3i7nYam6nkVDr6"},
+{title:"Tech Extempore",category:"Non-Technical",time:"01:30 PM - 02:30 PM",location:"Students Centre",date:"25 April 2026",poster:"posters/extempore.jpeg",link:"https://forms.gle/cmLehuyd282fmStr5"},
+{title:"Debate",category:"Non-Technical",time:"02:30 PM - 03:30 PM",location:"Students Centre",date:"25 April 2026",poster:"posters/debate.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLSctlunrm20OX5yj6nOmTHncOQmRnP7rjhFJLeLxehvDvSMZ5w/viewform?usp=header"},
+{title:"Quiz",category:"Non-Technical",time:"02:30 PM - 03:00 PM",location:"Mechanical Seminar Hall",date:"25 April 2026",poster:"posters/quiz.jpeg",link:"https://forms.gle/ALJ6WDTGmyPWoMpV6"}
+];
+
+function render(){
+const c=document.getElementById("events");
+c.innerHTML="";
+
+events.forEach(e=>{
+c.innerHTML+=`
+<div class="card-hidden bg-white/5 rounded-xl p-4 cursor-pointer" onclick="openPoster('${e.poster}')">
+
+<img src="${e.poster}" class="h-40 w-full object-cover rounded">
+
+<h2 class="mt-2 font-semibold">${e.title}</h2>
+
+<p class="text-sm text-gray-300 mt-1">📅 ${e.date}</p>
+<p class="text-sm text-gray-300">⏰ ${e.time}</p>
+<p class="text-sm text-gray-300">📍 ${e.location}</p>
+
+<a href="${e.link}" target="_blank"
+onclick="event.stopPropagation()"
+class="block mt-3 text-center bg-gradient-to-r from-blue-500 to-pink-500 py-2 rounded">
+Register
+</a>
+
+</div>`;
+});
+
+observe();
+}
+
+function filterEvents(category){
+if(category==="All"){
+render();
+return;
+}
+
+const filtered=events.filter(e=>e.category===category);
+const c=document.getElementById("events");
+c.innerHTML="";
+
+filtered.forEach(e=>{
+c.innerHTML+=`
+<div class="card-hidden bg-white/5 rounded-xl p-4 cursor-pointer" onclick="openPoster('${e.poster}')">
+
+<img src="${e.poster}" class="h-40 w-full object-cover rounded">
+
+<h2 class="mt-2 font-semibold">${e.title}</h2>
+
+<p class="text-sm text-gray-300 mt-1">📅 ${e.date}</p>
+<p class="text-sm text-gray-300">⏰ ${e.time}</p>
+<p class="text-sm text-gray-300">📍 ${e.location}</p>
+
+<a href="${e.link}" target="_blank"
+onclick="event.stopPropagation()"
+class="block mt-3 text-center bg-gradient-to-r from-blue-500 to-pink-500 py-2 rounded">
+Register
+</a>
+
+</div>`;
+});
+
+observe();
+}
+
+function openPoster(src){
+document.getElementById("posterImage").src=src;
+document.getElementById("posterModal").style.display="flex";
+}
+
+function closePoster(){
+document.getElementById("posterModal").style.display="none";
+}
+
+function observe(){
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting)e.target.classList.add("card-show");
+});
+});
+document.querySelectorAll(".card-hidden").forEach(el=>obs.observe(el));
+}
+
+/* VIDEO AUTO HIDE */
+const video=document.getElementById("videoPlayer");
+video.onended=()=>{document.getElementById("introVideo").style.display="none";};
+setTimeout(()=>{document.getElementById("introVideo").style.display="none";},6000);
+
+render();
+</script>
+
+<!-- FOOTER -->
+<footer class="mt-20 px-6 pb-10">
+
+<div class="max-w-4xl mx-auto rounded-3xl 
+bg-white/5 backdrop-blur-xl border border-white/10 
+p-8 text-center">
+
+<h3 class="text-lg mb-4 bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
+Designed & Developed by
+</h3>
+
+<div class="flex justify-center mb-4">
+<img src="profile.jpeg" class="w-20 h-20 rounded-full object-cover border border-white/20 shadow">
+</div>
+
+<p class="text-lg font-semibold text-white">Syed Roshan Riyan</p>
+<p class="text-gray-400 text-sm">mr.white_Hat | sdroxryn </p>
+
+<p class="text-gray-500 text-sm mt-1">
+Developer • Designer • Creator
+
+</p>
+
+<div class="flex justify-center gap-4 mt-6 flex-wrap">
+<a href="https://www.instagram.com/the_sdroxryn?igsh=MTF6c3A1MGQzcHYwaQ==" class="px-4 py-2 rounded bg-white/10">Instagram</a>
+<a href="https://github.com/syedroshanriyan" class="px-4 py-2 rounded bg-white/10">GitHub</a>
+<a href="https://www.linkedin.com/in/syed-roshan-riyan-b871273b0?utm_source=share_via&utm_content=profile&utm_medium=member_android" class="px-4 py-2 rounded bg-white/10">LinkedIn</a>
+</div>
+
+<div class="mt-6 text-sm text-gray-500 border-t border-white/10 pt-4">
+© 2026 Techno Rush • All Rights Reserved
+</div>
+
+</div>
+
+</footer>
+
+</body>
+</html>
