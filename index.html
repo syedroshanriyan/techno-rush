@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Techno Rush</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{background:black;overflow-x:hidden}
+
+/* INTRO */
+#intro{
+position:fixed;inset:0;z-index:9999;
+display:flex;align-items:center;justify-content:center;
+background:black;
+transition:opacity .8s ease;
+}
+#intro video{width:100%;height:100%;object-fit:cover}
+
+/* FADE */
+.fade-in{animation:fadeIn 1s ease forwards}
+.fade-out{opacity:0;transition:.7s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.card-hidden{opacity:0;transform:translateY(50px)}
+.card-show{opacity:1;transform:translateY(0);transition:.7s}
+
+/* GLASS */
+.glass{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1)}
+
+/* SHIMMER */
+.shimmer{background-size:200% auto;animation:shine 3s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+
+.gold{background:linear-gradient(120deg,#FFD700,#fff6b7,#FFD700);-webkit-background-clip:text;color:transparent}
+.silver{background:linear-gradient(120deg,#cfcfcf,#fff,#c0c0c0);-webkit-background-clip:text;color:transparent}
+
+/* MODAL */
+#modal{
+position:fixed;inset:0;
+background:rgba(0,0,0,0.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+#modal img{
+max-width:90%;
+max-height:90%;
+border-radius:16px;
+}
+</style>
+</head>
+
+<body class="text-white">
+
+<!-- INTRO -->
+<div id="intro">
+<video id="introVideo" autoplay muted playsinline>
+<source src="intro.mp4" type="video/mp4">
+</video>
+</div>
+
+<!-- MAIN -->
+<div id="main" class="opacity-0">
+
+<!-- HERO -->
+<div class="text-center mt-16 mb-12 fade-in">
+<h2 class="text-4xl md:text-6xl gold shimmer font-bold">DR.TTIT</h2>
+<p class="italic text-lg bg-gradient-to-r from-pink-400 to-blue-400 text-transparent bg-clip-text">PRESENTS</p>
+<h1 class="text-5xl md:text-7xl silver shimmer font-extrabold">TECHNO RUSH</h1>
+</div>
+
+<!-- EVENTS -->
+<div id="events" class="grid gap-6 px-6 md:grid-cols-2 lg:grid-cols-3"></div>
+
+<!-- FOOTER -->
+<footer class="mt-20 px-6 pb-10">
+<div class="max-w-4xl mx-auto glass rounded-3xl p-8 text-center">
+
+<h3 class="text-lg mb-4 bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
+Designed & Developed by
+</h3>
+
+<div class="flex justify-center mb-4">
+<img src="profile.jpeg" class="w-20 h-20 rounded-full object-cover border border-white/20 shadow">
+</div>
+
+<p class="text-lg font-semibold text-white">Syed Roshan Riyan</p>
+<p class="text-gray-400 text-sm">mr.white_Hat | sdroxryn </p>
+
+<p class="text-gray-500 text-sm mt-1">
+Developer • Designer • Creator
+
+</p>
+<div class="flex justify-center gap-4 mt-6 flex-wrap">
+<a href="https://www.instagram.com/the_sdroxryn?igsh=MTF6c3A1MGQzcHYwaQ==" class="px-4 py-2 rounded bg-white/10">Instagram</a>
+<a href="https://github.com/syedroshanriyan" class="px-4 py-2 rounded bg-white/10">GitHub</a>
+<a href="https://www.linkedin.com/in/syed-roshan-riyan-b871273b0?utm_source=share_via&utm_content=profile&utm_medium=member_android" class="px-4 py-2 rounded bg-white/10">LinkedIn</a>
+</div>
+
+</div>
+</footer>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" onclick="closePoster()">
+<img id="modalImg">
+</div>
+
+<script>
+
+/* EVENTS */
+const events=[
+{title:"Circuit Design",date:"25 April 2026",time:"10:30 AM - 11:30 AM",location:"ECE Lab",poster:"posters/circuit.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLScb4KNecfLLORRUSSYYZqLMDJnBdqF28EGczQa0A9fdWSKC4Q/viewform?usp=publish-editor",contact:"https://wa.me/919611748087"},
+{title:"Code Debugging",date:"25 April 2026",time:"11:30 AM - 12:30 PM",location:"CSE Lab 4 & 5",poster:"posters/code.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLSctMD7lxMwCKRvTQ-4ZjT_PIcVNaAL-NVGuks33223Ii0qKxQ/viewform?usp=publish-editor",contact:"https://wa.me/918123218291"},
+{title:"Solid Modelling",date:"25 April 2026",time:"11:30 AM - 12:30 PM",location:"CAED Lab",poster:"posters/solid.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLSe4qXhgg6BCw8vfcicJBWDueDz6EpUHFQ-L8zn8mWvcV-IC4Q/viewform",contact:"https://wa.me/919611748087"},
+{title:"Prompt Battle",date:"25 April 2026",time:"01:30 PM - 02:30 PM",location:"CSE Lab 3",poster:"posters/prompt.jpeg",link:"https://forms.gle/T4DW7t4Uyibig32AA",contact:"https://wa.me/918123218291"},
+{title:"Web Design",date:"25 April 2026",time:"01:30 PM - 02:30 PM",location:"CSE Lab 4 & 5",poster:"posters/web.jpeg",link:"https://share.google/QqN7HGJeUDIi5aBQx",contact:"https://wa.me/919611748087"},
+{title:"Tech Extempore",date:"25 April 2026",time:"01:30 PM - 02:30 PM",location:"Students Centre",poster:"posters/extempore.jpeg",link:"https://forms.gle/cmLehuyd282fmStr5",contact:"https://wa.me/918123218291"},
+{title:"Debate",date:"25 April 2026",time:"02:30 PM - 03:30 PM",location:"Students Centre",poster:"posters/debate.jpeg",link:"https://docs.google.com/forms/d/e/1FAIpQLSctlunrm20OX5yj6nOmTHncOQmRnP7rjhFJLeLxehvDvSMZ5w/viewform?usp=header",contact:"https://wa.me/919611748087"},
+{title:"Quiz",date:"25 April 2026",time:"02:30 PM - 03:00 PM",location:"Mechanical Seminar Hall",poster:"posters/quiz.jpeg",link:"https://forms.gle/ALJ6WDTGmyPWoMpV6",contact:"https://wa.me/918123218291"}
+];
+
+/* RENDER */
+function render(){
+const c=document.getElementById("events");
+c.innerHTML="";
+
+events.forEach(e=>{
+c.innerHTML+=`
+<div class="card-hidden glass p-4 rounded-xl cursor-pointer" onclick="openPoster('${e.poster}')">
+
+<img src="${e.poster}" class="h-40 w-full object-cover rounded">
+
+<h2 class="mt-2 font-semibold">${e.title}</h2>
+
+<div class="mt-2 text-sm text-gray-300">
+<p>📅 ${e.date}</p>
+<p>⏰ ${e.time}</p>
+<p>📍 ${e.location}</p>
+</div>
+
+<a href="${e.link}" target="_blank"
+onclick="event.stopPropagation()"
+class="block mt-3 text-center bg-gradient-to-r from-blue-500 to-pink-500 py-2 rounded">
+Register
+</a>
+
+<a href="${e.contact}" target="_blank"
+onclick="event.stopPropagation()"
+class="block mt-2 text-center bg-green-500 py-2 rounded">
+Contact Coordinator
+</a>
+
+</div>`;
+});
+
+observe();
+}
+
+/* SCROLL */
+function observe(){
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting)e.target.classList.add("card-show");
+});
+});
+document.querySelectorAll(".card-hidden").forEach(el=>obs.observe(el));
+}
+
+/* POSTER MODAL */
+function openPoster(src){
+document.getElementById("modal").style.display="flex";
+document.getElementById("modalImg").src=src;
+}
+function closePoster(){
+document.getElementById("modal").style.display="none";
+}
+
+/* INTRO CONTROL */
+const intro=document.getElementById("intro");
+const main=document.getElementById("main");
+const vid=document.getElementById("introVideo");
+
+function showMain(){
+intro.style.opacity="0";
+setTimeout(()=>{
+intro.style.display="none";
+main.style.opacity=1;
+main.classList.add("fade-in");
+},700);
+}
+
+/* always reveal UI (no lock) */
+vid.onended=showMain;
+setTimeout(showMain,4000);
+
+render();
+
+</script>
+
+</body>
+</html>
