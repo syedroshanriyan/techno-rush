@@ -182,23 +182,35 @@ function closePoster(){
 document.getElementById("modal").style.display="none";
 }
 
-/* INTRO CONTROL */
-const intro=document.getElementById("intro");
-const main=document.getElementById("main");
-const vid=document.getElementById("introVideo");
+/* INTRO CONTROL - FIXED */
+const intro = document.getElementById("intro");
+const main = document.getElementById("main");
+const vid = document.getElementById("introVideo");
 
 function showMain(){
-intro.style.opacity="0";
-setTimeout(()=>{
-intro.style.display="none";
-main.style.opacity=1;
-main.classList.add("fade-in");
-},700);
+  intro.style.opacity = "0";
+  setTimeout(()=>{
+    intro.style.display = "none";
+    main.style.opacity = 1;
+    main.classList.add("fade-in");
+  },700);
 }
 
-/* always reveal UI (no lock) */
-vid.onended=showMain;
-setTimeout(showMain,4000);
+/* WAIT UNTIL VIDEO CAN PLAY */
+vid.addEventListener("canplay", () => {
+  vid.play().catch(()=>{});
+});
+
+/* PLAY ON LOAD (fallback) */
+window.addEventListener("load", () => {
+  vid.play().catch(()=>{});
+});
+
+/* WHEN VIDEO ENDS */
+vid.onended = showMain;
+
+/* SAFETY TIMER (starts AFTER play attempt) */
+setTimeout(showMain, 5000);
 
 render();
 
